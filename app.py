@@ -17,6 +17,8 @@ braintree.Configuration.configure(
     os.environ.get('BT_PRIVATE_KEY')
 )
 
+print os.environ.get('BT_ENVIRONMENT'), os.environ.get('BT_MERCHANT_ID'), os.environ.get('BT_PUBLIC_KEY'), os.environ.get('BT_PRIVATE_KEY')
+
 TRANSACTION_SUCCESS_STATUSES = [
     braintree.Transaction.Status.Authorized,
     braintree.Transaction.Status.Authorizing,
@@ -57,10 +59,27 @@ def show_checkout(transaction_id):
 
 @app.route('/checkouts', methods=['POST'])
 def create_checkout():
-    result = braintree.Transaction.sale({
-        'amount': request.form['amount'],
+    import pdb;pdb.set_trace();
+    print '/checkouts request form:', request.form
+    #result = braintree.Transaction.sale({
+    #    'amount': request.form['amount'],
+    #    'payment_method_nonce': request.form['payment_method_nonce'],
+    #})
+    print 'received nonce', request.form['payment_method_nonce']
+    result = braintree.Customer.create({
+        "first_name": "charity",
+        "last_name": "smith",
         'payment_method_nonce': request.form['payment_method_nonce'],
-    })
+        })
+    print 'customer created. customer:', result
+    print 'customers payment info:', result.customer.payment_methods
+    print 'customer ka payment token:', result.customer.payment_methods[0].token
+    print 'deducting 12 dollars from customer acct...'
+    result2 = braintree.Transaction.sale({"payment_method_token":
+        result.customer.payment_methods[0].token, "amount": "12.00"})
+    print 'deduction successful, info of result:', result2
+    print ' # TODO(rushiagr): need to handle error scenario in case result2 fails'
+
 
     if result.is_success or result.transaction:
         return redirect(url_for('show_checkout',transaction_id=result.transaction.id))
