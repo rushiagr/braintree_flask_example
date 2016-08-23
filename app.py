@@ -59,7 +59,6 @@ def show_checkout(transaction_id):
 
 @app.route('/checkouts', methods=['POST'])
 def create_checkout():
-    import pdb;pdb.set_trace();
     print '/checkouts request form:', request.form
     #result = braintree.Transaction.sale({
     #    'amount': request.form['amount'],

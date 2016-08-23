@@ -11,7 +11,7 @@
       </p>
     </header>
 
-    <form id="payment-form" method="post" action="/checkouts">
+    <form id="payment-form" method="post" action="http://127.0.0.1:8000/payments/authorize">
       <section>
         <div class="bt-drop-in-wrapper">
           <div id="bt-dropin"></div>
@@ -24,6 +24,7 @@
             </div>
           </label>
         </section>
+        <input id="mytoken" name="authorization_token" type="hidden" value="b3cc29f2b4c79e7f5349d6ce7e00379dd61331fe">
 
       <button class="button" type="submit"><span>Test Transaction</span></button>
     </form>
